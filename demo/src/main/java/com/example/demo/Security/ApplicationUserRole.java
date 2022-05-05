@@ -7,8 +7,9 @@ import java.util.Set;
 import static com.example.demo.Security.ApplicationUserPermission.*;
 
 public enum ApplicationUserRole {
-    STUDENT(Sets.newHashSet()),
-    ADMIN(Sets.newHashSet(COURCE_READ, STUDENT_READ, COURCE_WRITE, STUDENT_WRITE));
+    ADMIN(Sets.newHashSet(COURCE_READ, STUDENT_READ, COURCE_WRITE, STUDENT_WRITE)),
+    ADMINTRAINEE(Sets.newHashSet(COURCE_READ, STUDENT_READ)),
+    STUDENT(Sets.newHashSet()); //zero permission
 
     private final Set<ApplicationUserPermission> permissions;
 

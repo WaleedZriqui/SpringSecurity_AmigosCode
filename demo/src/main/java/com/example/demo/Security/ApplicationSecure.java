@@ -25,10 +25,11 @@ public class ApplicationSecure extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
+                .antMatchers("/api/**").hasRole(ADMIN.name())
                 .anyRequest()
                 .authenticated()
                 .and()
-                .httpBasic(); //Basic Auth in Postman
+                .httpBasic(); //Type of Authorization in Postman is Basic Auth
     }
 
     @Override
@@ -44,6 +45,11 @@ public class ApplicationSecure extends WebSecurityConfigurerAdapter {
                 .password(passwordEncoder.encode("54321"))
                 .roles(STUDENT.name())
                 .build();
-        return new InMemoryUserDetailsManager(Waleed, Anas);
+        UserDetails Amr = User.builder()
+                .username("amr")
+                .password(passwordEncoder.encode("2006"))
+                .roles(ADMINTRAINEE.name())
+                .build();
+        return new InMemoryUserDetailsManager(Waleed, Anas, Amr);
     }
 }
