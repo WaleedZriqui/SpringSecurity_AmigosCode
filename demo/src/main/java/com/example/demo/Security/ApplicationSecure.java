@@ -28,10 +28,10 @@ public class ApplicationSecure extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()//Todo: Amigos will teach it later
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST,"/management/api/**").hasAuthority(COURCE_WRITE.name())
-                .antMatchers(HttpMethod.PUT,"/management/api/**").hasAuthority(COURCE_WRITE.name())
-                .antMatchers(HttpMethod.DELETE,"/management/api/**").hasAuthority(COURCE_WRITE.name())
-                .antMatchers(HttpMethod.GET,"/management/api/**").hasAnyRole(ADMIN.name(),ADMINTRAINEE.name())
+                .antMatchers(HttpMethod.POST,"/api/**").hasAuthority(COURCE_WRITE.getPermission())
+                .antMatchers(HttpMethod.PUT,"/api/**").hasAuthority(COURCE_WRITE.getPermission())
+                .antMatchers(HttpMethod.DELETE,"/api/**").hasAuthority(COURCE_WRITE.getPermission())
+                .antMatchers(HttpMethod.GET,"/api/**").hasAnyRole(ADMIN.name(),ADMINTRAINEE.name())
                 .anyRequest()
                 .authenticated()
                 .and()
