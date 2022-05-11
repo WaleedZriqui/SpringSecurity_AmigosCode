@@ -1,5 +1,6 @@
 package com.example.demo.Students;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -7,6 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("management/api/v1/students")
+@;sfkldj
 public class StudentManagementController {
     private static final List<Student> students = Arrays.asList(
             new Student(1,"waleed"),
@@ -14,8 +16,9 @@ public class StudentManagementController {
     );
 
     @GetMapping
+    @PreAuthorize("hasAuthority('student:read')")
     public List<Student> getAllStudent(){
-        return students;
+        return  students;
     }
 
     @PostMapping
