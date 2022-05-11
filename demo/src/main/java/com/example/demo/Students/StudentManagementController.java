@@ -8,7 +8,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("management/api/v1/students")
-@;sfkldj
 public class StudentManagementController {
     private static final List<Student> students = Arrays.asList(
             new Student(1,"waleed"),
@@ -22,16 +21,19 @@ public class StudentManagementController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('student:write')")
     public void registerNewStudent(@RequestBody Student student){
         System.out.println(student);
     }
 
     @DeleteMapping("{studentID}")
+    @PreAuthorize("hasAuthority('student:write')")
     public void deleteStudent(@PathVariable("studentID") Integer studentID){
         System.out.println(studentID);
     }
 
     @PutMapping("{studentID}")
+    @PreAuthorize("hasAuthority('student:write')")
     public void updateStudent(@PathVariable("studentID")Integer Id, @RequestBody Student student){
         System.out.println(student);
     }
