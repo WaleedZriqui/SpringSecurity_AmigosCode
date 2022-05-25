@@ -27,7 +27,7 @@ public enum ApplicationUserRole {
                 .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
                         .collect(Collectors.toSet());
         permissions.add(new SimpleGrantedAuthority("ROLE_"+ this.name()));//ROLE_ADMIN OR ROLE_STUDENT OR ...
-        //.add in set will add element as hash set (not in order)
+        //.add with permissions in set will add element as hash set (not in order)
         //here this refers to Role which can be (ADMIN, ADMINTRAINEE and STUDENT)
         return permissions;
     }

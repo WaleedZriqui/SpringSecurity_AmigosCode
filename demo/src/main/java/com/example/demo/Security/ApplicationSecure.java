@@ -3,8 +3,7 @@ package com.example.demo.Security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,8 +13,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import static com.example.demo.Security.ApplicationUserPermission.*;
+import java.util.concurrent.TimeUnit;
+
 import static com.example.demo.Security.ApplicationUserRole.*;
 
 @Configuration
@@ -29,22 +30,29 @@ public class ApplicationSecure extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()//Todo: Amigos will teach it later
                 .authorizeRequests()
                 .antMatchers("api/**").hasRole(STUDENT.name())
-//                .antMatchers(HttpMethod.POST,"/management/api/**").hasAuthority(STUDENT_WRITE.getPermission())
-//                .antMatchers(HttpMethod.PUT,"/management/api/**").hasAuthority(STUDENT_WRITE.getPermission())
-//                .antMatchers(HttpMethod.DELETE,"/management/api/**").hasAuthority(STUDENT_WRITE.getPermission())
-//                .antMatchers(HttpMethod.GET,"/management/api/**").hasAnyRole(ADMIN.name(),ADMINTRAINEE.name())
                 .anyRequest()
                 .authenticated()
                 .and()
-                .httpBasic(); //Type of Authorization in Postman is Basic Auth
+                .formLogin()//Type of Authorization in Postman is Form Auth
+                .and()
+                .rememberMe()
+                    .tokenValiditySeconds((int)TimeUnit.DAYS.toSeconds(25))
+                    .key("Very Dangerous")
+                .and()
+                .logout()
+                     .logoutUrl("/logout") //by default
+                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET")) //to specify it get not post
+                     .clearAuthentication(true) //remove the Authentication from the current SecurityContext if it is true (default)
+                     .invalidateHttpSession(true) //invalidate the HttpSession if it is true and the session is not null.
+                     .deleteCookies("JSESSIONID","remember-me") //it will remove both cookies (JSESSIONID, remember-me) when logout
+                     .logoutSuccessUrl("/login"); //when logout success it goes to this url
     }
 
     @Override
     @Bean //create object of UserDetailsService
-    protected UserDetailsService userDetailsService() {
+    protected UserDetailsService userDetailsService() { //to be cancelled create new class that return Authentication provider
         UserDetails Waleed = User.builder()
                 .username("waleed")
                 .password(passwordEncoder.encode("123456789"))
